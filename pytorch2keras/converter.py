@@ -6,6 +6,7 @@ import torch
 import torch.jit
 import torch.autograd
 import torch.serialization
+from torch.onnx import OperatorExportTypes
 import contextlib
 from torch.jit import _unique_state_dict
 
@@ -40,7 +41,7 @@ def _optimize_graph(graph, aten):
 
     torch._C._jit_pass_peephole(graph)
     torch._C._jit_pass_lint(graph)
-    graph = torch._C._jit_pass_onnx(graph, aten)
+    graph = torch._C._jit_pass_onnx(graph, OperatorExportTypes.ONNX_ATEN if aten else OperatorExportTypes.ONNX)
     torch._C._jit_pass_lint(graph)
     torch._C._jit_pass_onnx_peephole(graph)
     torch._C._jit_pass_lint(graph)
